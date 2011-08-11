@@ -24,10 +24,14 @@
 
 namespace Pile;
 
+use ErrorException,
+    Exception,
+    Pale;
+
 /**
  *
  */
-class Filesystem
+class FileSystem
 {
 
     /**
@@ -35,13 +39,16 @@ class Filesystem
      *
      * @param string $path
      * @param string $group
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function chgrp($path, $group)
     {
-        if (!chgrp($this->realPath($path), $group)) {
-            throw new Exception();
-        }
+        $path = $this->realPath($path);
+
+        Pale\run(function() use ($path, $group) {
+            return chgrp($path, $group);
+        });
 
         return $this;
     }
@@ -51,13 +58,16 @@ class Filesystem
      *
      * @param string $path
      * @param string $permission
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function chmod($path, $permission)
     {
-        if (!chmod($this->realPath($path), $permission)) {
-            throw new Exception();
-        }
+        $path = $this->realPath($path);
+
+        Pale\run(function() use ($path, $permission) {
+            return chmod($path, $permission);
+        });
 
         return $this;
     }
@@ -67,13 +77,16 @@ class Filesystem
      *
      * @param string $path
      * @param string $owner
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function chown($path, $owner)
     {
-        if (!chown($this->realPath($path), $owner)) {
-            throw new Exception();
-        }
+        $path = $this->realPath($path);
+
+        Pale\run(function() use ($path, $owner) {
+            return chown($path, $owner);
+        });
 
         return $this;
     }
@@ -83,13 +96,16 @@ class Filesystem
      *
      * @param string $from
      * @param string $to
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function copy($from, $to)
     {
-        if (!copy($this->realPath($from), $to, $context)) {
-            throw new Exception();
-        }
+        $from = $this->realPath($from);
+
+        Pale\run(function() use ($from, $to) {
+            return copy($from, $to);
+        });
 
         return $this;
     }
@@ -98,13 +114,16 @@ class Filesystem
      * Delete a file or directory
      *
      * @param string $path
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function delete($path)
     {
-        if (!unlink($this->realPath($path))) {
-            throw new Exception();
-        }
+        $path = $this->realPath($path);
+
+        Pale\run(function() use ($path) {
+            return unlink($path);
+        });
 
         return $this;
     }
@@ -114,10 +133,15 @@ class Filesystem
      *
      * @param string $path
      * @return boolean
+     * @throws ErrorException
      */
     public function exists($path)
     {
-        return file_exists($this->realPath($path));
+        $path = $this->realPath();
+
+        return Pale\run(function() use ($path) {
+            return file_exists($path);
+        });
     }
 
     /**
@@ -125,10 +149,15 @@ class Filesystem
      *
      * @param string $path
      * @return boolean
+     * @throws ErrorException
      */
     public function isDirectory($path)
     {
-        return is_dir($this->realPath($path));
+        $path = $this->realPath();
+
+        return Pale\run(function() use ($path) {
+            return is_dir($path);
+        });
     }
 
     /**
@@ -136,10 +165,15 @@ class Filesystem
      *
      * @param string $path
      * @return boolean
+     * @throws ErrorException
      */
     public function isFile($path)
     {
-        return is_file($this->realPath($path));
+        $path = $this->realPath($path);
+
+        return Pale\run(function() use ($path) {
+            return is_file($path);
+        });
     }
 
     /**
@@ -148,13 +182,16 @@ class Filesystem
      * @param string $path
      * @param integer $mode
      * @param boolean $recursive
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function makeDirectory($path, $mode = 0777, $recursive = false)
     {
-        if (!mkdir($this->realPath($path), $mode, $recursive)) {
-            throw new Exception();
-        }
+        $path = $this->realPath($path);
+
+        Pale\run(function() use ($path, $mode, $recursive) {
+            return mkdir($path, $mode, $recursive);
+        });
 
         return $this;
     }
@@ -164,13 +201,16 @@ class Filesystem
      *
      * @param string $from
      * @param string $to
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function move($from, $to)
     {
-        if (!rename($this->realPath($from), $to)) {
-            throw new Exception();
-        }
+        $from = $this->realPath($from);
+
+        Pale\run(function() use ($from, $to) {
+            return rename($from, $to);
+        });
 
         return $this;
     }
@@ -180,16 +220,13 @@ class Filesystem
      *
      * @param string $path
      * @return string
+     * @throws ErrorException
      */
     public function realPath($path)
     {
-        $realPath = realPath($path);
-
-        if ($realPath === FALSE) {
-            throw new Exception();
-        }
-
-        return $realPath;
+        return Pale\run(function() use ($path) {
+            return realPath($path);
+        });
     }
 
     /**
@@ -197,13 +234,16 @@ class Filesystem
      *
      * @param string $target
      * @param string $link
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function symlink($target, $link)
     {
-        if (!symlink($this->realPath($target), $link)) {
-            throw new Exception();
-        }
+        $target = $this->realPath($target);
+
+        Pale\run(function() use ($target, $link) {
+            return symlink($target, $link);
+        });
 
         return $this;
     }
@@ -212,13 +252,16 @@ class Filesystem
      * Touch a file or directory
      *
      * @param string $path
-     * @return Filesystem
+     * @return FileSystem
+     * @throws ErrorException
      */
     public function touch($path)
     {
-        if (!touch($this->realPath($path))) {
-            throw new Exception();
-        }
+        $path = $this->realPath($path);
+
+        Pale\run(function() use ($path) {
+            return touch($path);
+        });
 
         return $this;
     }
