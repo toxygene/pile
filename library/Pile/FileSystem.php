@@ -102,22 +102,6 @@ class FileSystem
     }
 
     /**
-     * Delete a file or directory
-     *
-     * @param string $path
-     * @return FileSystem
-     * @throws Exception
-     */
-    public function delete($path)
-    {
-        $this->_run(function() use ($path) {
-            return unlink($path);
-        });
-
-        return $this;
-    }
-
-    /**
      * Check if a file or directory exists
      *
      * @param string $path
@@ -327,6 +311,23 @@ class FileSystem
     }
 
     /**
+     * Remove a directory
+     *
+     * @param string $path
+     * @param resource $context
+     * @return FileSystem
+     * @throws Exception
+     */
+    public function removeDirectory($path, $context = null)
+    {
+        $this->_run(function() use ($path, $context) {
+            return rmdir($path, $context);
+        });
+
+        return $this;
+    }
+
+    /**
      * Symlink a path
      *
      * @param string $target
@@ -354,6 +355,38 @@ class FileSystem
     {
         $this->_run(function() use ($path) {
             return touch($path);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Set the umask
+     *
+     * The previous umask value is returned.
+     *
+     * @param integer $mask
+     * @return integer
+     * @throws Exception
+     */
+    public function umask($mask)
+    {
+        return $this->_run(function() use ($mask) {
+            return umask($mask);
+        });
+    }
+
+    /**
+     * Unlink a path
+     *
+     * @param string $path
+     * @return FileSystem
+     * @throws Exception
+     */
+    public function unlink($path)
+    {
+        $this->_run(function() use ($path) {
+            return unlink($path);
         });
 
         return $this;
