@@ -38,7 +38,7 @@ class FileSystem
      * @param string $path
      * @param string $group
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function chgrp($path, $group)
     {
@@ -55,7 +55,7 @@ class FileSystem
      * @param string $path
      * @param string $permission
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function chmod($path, $permission)
     {
@@ -72,7 +72,7 @@ class FileSystem
      * @param string $path
      * @param string $owner
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function chown($path, $owner)
     {
@@ -90,7 +90,7 @@ class FileSystem
      * @param string $to
      * @param resource $context
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function copy($from, $to, $context = NULL)
     {
@@ -106,7 +106,7 @@ class FileSystem
      *
      * @param string $path
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function delete($path)
     {
@@ -122,7 +122,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function exists($path)
     {
@@ -136,7 +136,7 @@ class FileSystem
      *
      * @param string $path
      * @return integer
-     * @throws ErrorException
+     * @throws Exception
      */
     public function filesize($path)
     {
@@ -150,7 +150,7 @@ class FileSystem
      *
      * @param string $path
      * @return string
-     * @throws ErrorException
+     * @throws Exception
      */
     public function filetype($path)
     {
@@ -165,7 +165,7 @@ class FileSystem
      * @param string $pattern
      * @param integer $flags
      * @return array
-     * @throws ErrorException
+     * @throws Exception
      */
     public function glob($pattern, $flags = 0)
     {
@@ -179,7 +179,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isDirectory($path)
     {
@@ -193,7 +193,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isExecutable($path)
     {
@@ -207,7 +207,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isFile($path)
     {
@@ -221,7 +221,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isLink($path)
     {
@@ -235,7 +235,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isReadable($path)
     {
@@ -249,7 +249,7 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isWritable($path)
     {
@@ -264,7 +264,7 @@ class FileSystem
      * @param string $target
      * @param string $link
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function link($target, $link)
     {
@@ -283,7 +283,7 @@ class FileSystem
      * @param boolean $recursive
      * @param resource $context
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function makeDirectory($path, $mode = 0777, $recursive = false, $context = null)
     {
@@ -301,7 +301,7 @@ class FileSystem
      * @param string $to
      * @param resource $context
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function move($from, $to, $context = null)
     {
@@ -317,7 +317,7 @@ class FileSystem
      *
      * @param string $path
      * @return string
-     * @throws ErrorException
+     * @throws Exception
      */
     public function realPath($path)
     {
@@ -332,7 +332,7 @@ class FileSystem
      * @param string $target
      * @param string $link
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function symlink($target, $link)
     {
@@ -348,7 +348,7 @@ class FileSystem
      *
      * @param string $path
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function touch($path)
     {
