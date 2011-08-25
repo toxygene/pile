@@ -11,7 +11,7 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
+ * The above copyright notice and this permission notice shall be excluded in
  * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -26,44 +26,40 @@
 namespace PileTest\FileSet;
 
 use ArrayIterator,
-    Pile\FileSet\IncludePatterns,
+    Pile\FileSet\AbstractPatterns,
     PHPUnit_Framework_TestCase as TestCase;
 
 /**
  *
  */
-class IncludePatternsTest extends TestCase
+class AbstractPatternsTest extends TestCase
 {
 
     /**
-     * Include patterns
-     * @var IncludePatterns
+     * Abstract patterns
+     * @var AbstractPatterns
      */
-    private $_includePatterns;
+    private $_abstractPatterns;
 
     /**
      * Setup the test case
      */
     public function setUp()
     {
-        $this->_includePatterns = new IncludePatterns(
-            new ArrayIterator(
-                array(
-                    "one",
-                    "two",
-                    "three"
-                )
-            )
+        $this->_abstractPatterns = $this->getMock(
+            "\Pile\FileSet\AbstractPatterns",
+            array("accept"),
+            array(new ArrayIterator(array("one", "two", "three")))
         );
     }
 
-    public function testIterationIsLimitedToMatchedPatterns()
+    public function testPatternsCanBeAddedAndRetrieved()
     {
-        $this->_includePatterns
-             ->addPattern("#^one$#")
-             ->addPattern("#re#");
+        $this->_abstractPatterns
+             ->addPattern("#one#")
+             ->addPattern("#two#");
 
-        $this->assertEquals(array("one", "three"), iterator_to_array($this->_includePatterns, false));
+        $this->assertEquals(array("#one#", "#two#"), $this->_abstractPatterns->getPatterns());
     }
 
 }

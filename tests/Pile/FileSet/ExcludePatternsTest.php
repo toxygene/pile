@@ -57,15 +57,6 @@ class ExcludePatternsTest extends TestCase
         );
     }
 
-    public function testPatternsCanBeAddedAndRetrieved()
-    {
-        $this->_excludePatterns
-             ->addPattern("#one#")
-             ->addPattern("#two#");
-
-        $this->assertEquals(array("#one#", "#two#"), $this->_excludePatterns->getPatterns());
-    }
-
     public function testIterationIsLimitedToMatchedPatterns()
     {
         $this->_excludePatterns
