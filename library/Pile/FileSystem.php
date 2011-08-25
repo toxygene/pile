@@ -25,9 +25,7 @@
 
 namespace Pile;
 
-use ErrorException,
-    Exception,
-    Pale;
+use Pile\Exception;
 
 /**
  *
@@ -41,13 +39,11 @@ class FileSystem
      * @param string $path
      * @param string $group
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function chgrp($path, $group)
     {
-        $path = $this->realPath($path);
-
-        Pale\run(function() use ($path, $group) {
+        $this->_run(function() use ($path, $group) {
             return chgrp($path, $group);
         });
 
@@ -60,13 +56,11 @@ class FileSystem
      * @param string $path
      * @param string $permission
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function chmod($path, $permission)
     {
-        $path = $this->realPath($path);
-
-        Pale\run(function() use ($path, $permission) {
+        $this->_run(function() use ($path, $permission) {
             return chmod($path, $permission);
         });
 
@@ -79,13 +73,11 @@ class FileSystem
      * @param string $path
      * @param string $owner
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function chown($path, $owner)
     {
-        $path = $this->realPath($path);
-
-        Pale\run(function() use ($path, $owner) {
+        $this->_run(function() use ($path, $owner) {
             return chown($path, $owner);
         });
 
@@ -97,33 +89,14 @@ class FileSystem
      *
      * @param string $from
      * @param string $to
+     * @param resource $context
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
-    public function copy($from, $to)
+    public function copy($from, $to, $context = NULL)
     {
-        $from = $this->realPath($from);
-
-        Pale\run(function() use ($from, $to) {
-            return copy($from, $to);
-        });
-
-        return $this;
-    }
-
-    /**
-     * Delete a file or directory
-     *
-     * @param string $path
-     * @return FileSystem
-     * @throws ErrorException
-     */
-    public function delete($path)
-    {
-        $path = $this->realPath($path);
-
-        Pale\run(function() use ($path) {
-            return unlink($path);
+        $this->_run(function() use ($from, $to, $context) {
+            return copy($from, $to, $context);
         });
 
         return $this;
@@ -134,14 +107,55 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function exists($path)
     {
-        $path = $this->realPath();
-
-        return Pale\run(function() use ($path) {
+        return $this->_run(function() use ($path) {
             return file_exists($path);
+        });
+    }
+
+    /**
+     * Get the size of a path
+     *
+     * @param string $path
+     * @return integer
+     * @throws Exception
+     */
+    public function filesize($path)
+    {
+        return $this->_run(function() use ($path) {
+            return filesize($path);
+        });
+    }
+
+    /**
+     * Get the type of a path
+     *
+     * @param string $path
+     * @return string
+     * @throws Exception
+     */
+    public function filetype($path)
+    {
+        return $this->_run(function() use ($path) {
+            return filetype($path);
+        });
+    }
+
+    /**
+     * Search the filesystem accorind to libc glob()
+     *
+     * @param string $pattern
+     * @param integer $flags
+     * @return array
+     * @throws Exception
+     */
+    public function glob($pattern, $flags = 0)
+    {
+        return $this->_run(function() use ($pattern, $flags) {
+            return glob($pattern, $flags);
         });
     }
 
@@ -150,14 +164,26 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isDirectory($path)
     {
-        $path = $this->realPath();
-
-        return Pale\run(function() use ($path) {
+        return $this->_run(function() use ($path) {
             return is_dir($path);
+        });
+    }
+
+    /**
+     * Check if a path is executable
+     *
+     * @param string $path
+     * @return boolean
+     * @throws Exception
+     */
+    public function isExecutable($path)
+    {
+        return $this->_run(function() use ($path) {
+            return is_executable($path);
         });
     }
 
@@ -166,15 +192,72 @@ class FileSystem
      *
      * @param string $path
      * @return boolean
-     * @throws ErrorException
+     * @throws Exception
      */
     public function isFile($path)
     {
-        $path = $this->realPath($path);
-
-        return Pale\run(function() use ($path) {
+        return $this->_run(function() use ($path) {
             return is_file($path);
         });
+    }
+
+    /**
+     * Check if a path is a link
+     *
+     * @param string $path
+     * @return boolean
+     * @throws Exception
+     */
+    public function isLink($path)
+    {
+        return $this->_run(function() use ($path) {
+            return is_link($path);
+        });
+    }
+
+    /**
+     * Check if a path is readable
+     *
+     * @param string $path
+     * @return boolean
+     * @throws Exception
+     */
+    public function isReadable($path)
+    {
+        return $this->_run(function() use ($path) {
+            return is_readable($path);
+        });
+    }
+
+    /**
+     * Check if a path is writable
+     *
+     * @param string $path
+     * @return boolean
+     * @throws Exception
+     */
+    public function isWritable($path)
+    {
+        return $this->_run(function() use ($path) {
+            return is_writable($path);
+        });
+    }
+
+    /**
+     * Hard link a path
+     *
+     * @param string $target
+     * @param string $link
+     * @return FileSystem
+     * @throws Exception
+     */
+    public function link($target, $link)
+    {
+        $this->_run(function() use ($target, $link) {
+            return link($target, $link);
+        });
+
+        return $this;
     }
 
     /**
@@ -183,15 +266,14 @@ class FileSystem
      * @param string $path
      * @param integer $mode
      * @param boolean $recursive
+     * @param resource $context
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
-    public function makeDirectory($path, $mode = 0777, $recursive = false)
+    public function makeDirectory($path, $mode = 0777, $recursive = false, $context = null)
     {
-        $path = $this->realPath($path);
-
-        Pale\run(function() use ($path, $mode, $recursive) {
-            return mkdir($path, $mode, $recursive);
+        $this->_run(function() use ($path, $mode, $recursive, $context) {
+            return mkdir($path, $mode, $recursive, $context);
         });
 
         return $this;
@@ -202,15 +284,14 @@ class FileSystem
      *
      * @param string $from
      * @param string $to
+     * @param resource $context
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
-    public function move($from, $to)
+    public function move($from, $to, $context = null)
     {
-        $from = $this->realPath($from);
-
-        Pale\run(function() use ($from, $to) {
-            return rename($from, $to);
+        $this->_run(function() use ($from, $to, $context) {
+            return rename($from, $to, $context);
         });
 
         return $this;
@@ -221,28 +302,43 @@ class FileSystem
      *
      * @param string $path
      * @return string
-     * @throws ErrorException
+     * @throws Exception
      */
     public function realPath($path)
     {
-        return Pale\run(function() use ($path) {
+        return $this->_run(function() use ($path) {
             return realPath($path);
         });
     }
 
     /**
-     * Symlink a file or directory
+     * Remove a directory
+     *
+     * @param string $path
+     * @param resource $context
+     * @return FileSystem
+     * @throws Exception
+     */
+    public function removeDirectory($path, $context = null)
+    {
+        $this->_run(function() use ($path, $context) {
+            return rmdir($path, $context);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Symlink a path
      *
      * @param string $target
      * @param string $link
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function symlink($target, $link)
     {
-        $target = $this->realPath($target);
-
-        Pale\run(function() use ($target, $link) {
+        $this->_run(function() use ($target, $link) {
             return symlink($target, $link);
         });
 
@@ -254,17 +350,73 @@ class FileSystem
      *
      * @param string $path
      * @return FileSystem
-     * @throws ErrorException
+     * @throws Exception
      */
     public function touch($path)
     {
-        $path = $this->realPath($path);
-
-        Pale\run(function() use ($path) {
+        $this->_run(function() use ($path) {
             return touch($path);
         });
 
         return $this;
+    }
+
+    /**
+     * Set the umask
+     *
+     * The previous umask value is returned.
+     *
+     * @param integer $mask
+     * @return integer
+     * @throws Exception
+     */
+    public function umask($mask)
+    {
+        return $this->_run(function() use ($mask) {
+            return umask($mask);
+        });
+    }
+
+    /**
+     * Unlink a path
+     *
+     * @param string $path
+     * @return FileSystem
+     * @throws Exception
+     */
+    public function unlink($path)
+    {
+        $this->_run(function() use ($path) {
+            return unlink($path);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Run a function in an error trapped environment
+     *
+     * @param function $function
+     * @return mixed
+     * @throws Exception
+     */
+    private function _run($function)
+    {
+        $errorNumber = $errorString = $errorFile = $errorLine = null;
+        set_error_handler(function($errno, $errstr, $errfile, $errline) use ($errorNumber, $errorString, $errorFile, $errorLine) {
+            $errorNumber = $errno;
+            $errorString = $errstr;
+            $errorFile   = $errfile;
+            $errorLine   = $errline;
+        });
+
+        $result = $function();
+
+        if ($errorNumber) {
+            throw new Exception($errorString, 0, $errorNumber, $errorFile, $errorLine);
+        }
+
+        return $result;
     }
 
 }
