@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<package version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+    <name>Pile</name>
+    <uri>http://pear.superglobals.com/pile</uri>
+    <summary>PHP file system abstraction library</summary>
+    <description>PHP file system abstraction library</description>
+    <lead>
+        <name>Justin Henderickson</name>
+        <user>jhendric</user>
+        <email>justin.hendrickson@gmail.com</email>
+        <active>yes</active>
+    </lead>
+    <date>2011-08-26</date>
+    <version>
+        <release>0.0.1</release>
+        <api>0.0.0</api>
+    </version>
+    <stability>
+        <release>alpha</release>
+        <api>alpha</api>
+    </stability>
+    <license uri="http://www.opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</license>
+    <notes>Initial Release</notes>
+    <contents>
+        <dir name="/">
+            <dir name="library">
+                <dir name="Pile">
+                    <dir name="FileSet">
+                        <file name="AbstractPatterns.php" role="php" />
+                        <file name="ExcludePatterns.php" role="php" />
+                        <file name="IncludePatterns.php" role="php" />
+                    </dir>
+                    <file name="Autoloader.php" role="php" />
+                    <file name="Exception.php" role="php" />
+                    <file name="FileSystem.php" role="php" />
+                </dir>
+            </dir>
+            <dir name="tests">
+                <dir name="Pile">
+                    <dir name="FileSet">
+                        <file name="AbstractPatternsTest.php" role="test" />
+                        <file name="ExcludePatternsTest.php" role="test" />
+                        <file name="IncludePatternsTest.php" role="test" />
+                    </dir>
+                    <file name="FileSystemTest.php" role="test" />
+                </dir>
+                <file name="bootstrap.php" role="test" />
+                <file name="phpunit.xml" role="test" />
+            </dir>
+            <file name="README" role="doc" />
+        </dir>
+    </contents>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.3.0</min>
+            </php>
+            <pearinstaller>
+                <min>1.4.8</min>
+            </pearinstaller>
+        </required>
+    </dependencies>
+    <phprelease>
+        <filelist>
+            <install name="library/Pile/FileSet/AbstractPatterns.php" as="Pile/FileSet/AbstractPatterns.php" />
+            <install name="library/Pile/FileSet/ExcludePatterns.php" as="Pile/FileSet/ExcludePatterns.php" />
+            <install name="library/Pile/FileSet/IncludePatterns.php" as="Pile/FileSet/IncludePatterns.php" />
+            <install name="library/Pile/Autoloader.php" as="Pile/Autoloader.php" />
+            <install name="library/Pile/Exception.php" as="Pile/Exception.php" />
+            <install name="library/Pile/FileSystem.php" as="Pile/FileSystem.php" />
+        </filelist>
+    </phprelease>
+</package>
