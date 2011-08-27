@@ -96,7 +96,11 @@ class FileSystem
     public function copy($from, $to, $context = NULL)
     {
         $this->_run(function() use ($from, $to, $context) {
-            return copy($from, $to, $context);
+            if ($context) {
+                return copy($from, $to, $context);
+            } else {
+                return copy($from, $to);
+            }
         });
 
         return $this;
@@ -273,7 +277,11 @@ class FileSystem
     public function makeDirectory($path, $mode = 0777, $recursive = false, $context = null)
     {
         $this->_run(function() use ($path, $mode, $recursive, $context) {
-            return mkdir($path, $mode, $recursive, $context);
+            if ($context) {
+                return mkdir($path, $mode, $recursive, $context);
+            } else {
+                return mkdir($path, $mode, $recursive);
+            }
         });
 
         return $this;
@@ -291,7 +299,11 @@ class FileSystem
     public function move($from, $to, $context = null)
     {
         $this->_run(function() use ($from, $to, $context) {
-            return rename($from, $to, $context);
+            if ($context) {
+                return rename($from, $to, $context);
+            } else {
+                return rename($from, $to);
+            }
         });
 
         return $this;
@@ -322,7 +334,11 @@ class FileSystem
     public function removeDirectory($path, $context = null)
     {
         $this->_run(function() use ($path, $context) {
-            return rmdir($path, $context);
+            if ($context) {
+                return rmdir($path, $context);
+            } else {
+                return rmdir($path);
+            }
         });
 
         return $this;
@@ -402,19 +418,18 @@ class FileSystem
      */
     private function _run($function)
     {
-        $errorNumber = $errorString = $errorFile = $errorLine = null;
-        set_error_handler(function($errno, $errstr, $errfile, $errline) use ($errorNumber, $errorString, $errorFile, $errorLine) {
-            $errorNumber = $errno;
-            $errorString = $errstr;
-            $errorFile   = $errfile;
-            $errorLine   = $errline;
+        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+            throw new Exception($errstr, 0, $errno, $errfile, $errline);
         });
 
-        $result = $function();
-
-        if ($errorNumber) {
-            throw new Exception($errorString, 0, $errorNumber, $errorFile, $errorLine);
+        try {
+            $result = $function();
+        } catch (Exception $e) {
+            restore_error_handler();
+            throw $e;
         }
+
+        restore_error_handler();
 
         return $result;
     }
