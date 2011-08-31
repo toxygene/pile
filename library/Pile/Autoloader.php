@@ -12,18 +12,6 @@ class Autoloader
 {
 
     /**
-     * Class mapping
-     * @var array
-     */
-    private $_classes = array(
-        "Pile\Exception",
-        "Pile\FileSystem",
-        "Pile\FileSet\AbstractPatterns",
-        "Pile\FileSet\ExcludePatterns",
-        "Pile\FileSet\IncludePatterns"
-    );
-
-    /**
      * Path
      * @var string
      */
@@ -44,19 +32,9 @@ class Autoloader
      */
     public function autoload($className)
     {
-        if (in_array($className, $this->getClasses())) {
+        if (preg_match("#^Pile\\#", $className)) {
             require_once $this->getPath() . str_replace("\\", DIRECTORY_SEPARATOR, $className) . ".php";
         }
-    }
-
-    /**
-     * Get the classes
-     *
-     * @return array
-     */
-    public function getClasses()
-    {
-        return $this->_classes;
     }
 
     /**
