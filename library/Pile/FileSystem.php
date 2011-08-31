@@ -34,6 +34,22 @@ class FileSystem
 {
 
     /**
+     * Change the current directory
+     *
+     * @param string $path
+     * @return FileSystem
+     * @throws Exception
+     */
+    public function chdir($path)
+    {
+        $this->_run(function() use ($path) {
+            return chdir($path);
+        });
+
+        return $this;
+    }
+
+    /**
      * Change the group of a path
      *
      * @param string $path
@@ -104,6 +120,20 @@ class FileSystem
         });
 
         return $this;
+    }
+
+    /**
+     * Execute a command
+     *
+     * @param string $command
+     * @param array $output
+     * @param string $returnVar
+     */
+    public function execute($command, &$output = null, &$returnVar = null)
+    {
+        return $this->_run(function() use ($command, &$output, &$returnVar) {
+            return exec($command, $output, $returnVar);
+        });
     }
 
     /**
