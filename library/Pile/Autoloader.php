@@ -32,7 +32,7 @@ class Autoloader
      */
     public function autoload($className)
     {
-        if (preg_match("#^Pile\\#", $className)) {
+        if (preg_match("#^Pile\\\\#", $className)) {
             require_once $this->getPath() . str_replace("\\", DIRECTORY_SEPARATOR, $className) . ".php";
         }
     }
