@@ -12,7 +12,7 @@
     </lead>
     <date>2011-08-26</date>
     <version>
-        <release>0.0.1</release>
+        <release>0.0.2</release>
         <api>0.0.1</api>
     </version>
     <stability>
@@ -20,7 +20,9 @@
         <api>alpha</api>
     </stability>
     <license uri="http://www.opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</license>
-    <notes>Initial Release</notes>
+    <notes> * Added chdir method
+ * Added execute method
+ * Changed autoloader to handle any Pile namespaced class</notes>
     <contents>
         <dir name="/">
             <dir name="library">
@@ -70,4 +72,18 @@
             <install name="library/Pile/FileSystem.php" as="Pile/FileSystem.php" />
         </filelist>
     </phprelease>
+    <changelog>
+        <release>
+            <version>
+                <release>0.0.1</release>
+                <api>0.0.1</api>
+            </version>
+            <stability>
+                <release>alpha</release>
+                <api>alpha</api>
+            </stability>
+            <license uri="http://www.opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</license>
+            <notes>Initial Release</notes>
+        </release>
+    </changelog>
 </package>
