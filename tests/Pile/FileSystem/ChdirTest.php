@@ -29,21 +29,66 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Setup Pile autoloading
-require_once "../library/Pile/Autoloader.php";
+namespace PileTest\FileSystem;
 
-$pileAutoloader = new Pile\Autoloader();
-$pileAutoloader->register();
+use Pile\FileSystem,
+    PHPUnit_Framework_TestCase as TestCase;
 
-// Setup PHPUnit autoloading
-require_once "PHPUnit/Autoload.php";
+/**
+ *
+ */
+class ChdirTest extends TestCase
+{
 
-// Set the error reporting
-error_reporting(E_ALL | E_STRICT);
+    /**
+     * Directory
+     * @var string
+     */
+    private $_directory;
 
-// Load the configuration
-if (is_readable('TestConfiguration.php')) {
-    require_once 'TestConfiguration.php';
-} else {
-    require_once 'TestConfiguration.php.dist';
+    /**
+     * File system
+     * @var FileSystem
+     */
+    private $_fileSystem;
+
+    /**
+     * Setup the test case
+     */
+    public function setUp()
+    {
+        if (!PILE_CHDIR_VALID_DIRECTORY) {
+            $this->markTestSkipped("PILE_CHDIR_VALID_DIRECTORY constant is not set");
+        }
+
+        if (!PILE_CHDIR_INVALID_DIRECTORY) {
+            $this->markTestSkipped("PILE_CHDIR_INVALID_DIRECTORY constant is not set");
+        }
+
+        $this->_directory = getcwd();
+        $this->_fileSystem = new FileSystem();
+    }
+
+    /**
+     * Tear down the test case
+     */
+    public function tearDown()
+    {
+        chdir($this->_directory);
+    }
+
+    public function testErrorsChangingDirectoryRaiseExceptions()
+    {
+        $this->setExpectedException("Pile\Exception");
+
+        $this->_fileSystem->chdir(PILE_CHDIR_INVALID_DIRECTORY);
+    }
+
+    public function testCurrentWorkingDirectoryIsChanged()
+    {
+        $this->_fileSystem->chdir(PILE_CHDIR_VALID_DIRECTORY);
+
+        $this->assertEquals(PILE_CHDIR_VALID_DIRECTORY, getcwd());
+    }
+
 }

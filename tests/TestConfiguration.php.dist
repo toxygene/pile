@@ -29,21 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Setup Pile autoloading
-require_once "../library/Pile/Autoloader.php";
+define("PILE_CHDIR_VALID_DIRECTORY", "");
+define("PILE_CHDIR_INVALID_DIRECTORY", "");
 
-$pileAutoloader = new Pile\Autoloader();
-$pileAutoloader->register();
-
-// Setup PHPUnit autoloading
-require_once "PHPUnit/Autoload.php";
-
-// Set the error reporting
-error_reporting(E_ALL | E_STRICT);
-
-// Load the configuration
-if (is_readable('TestConfiguration.php')) {
-    require_once 'TestConfiguration.php';
-} else {
-    require_once 'TestConfiguration.php.dist';
-}
+define("PILE_CHGRP_VALID_GROUP", "");
+define("PILE_CHGRP_INVALID_GROUP", "");

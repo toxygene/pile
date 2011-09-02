@@ -29,21 +29,70 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Setup Pile autoloading
-require_once "../library/Pile/Autoloader.php";
+namespace PileTest\FileSystem;
 
-$pileAutoloader = new Pile\Autoloader();
-$pileAutoloader->register();
+use Pile\FileSystem,
+    PHPUnit_Framework_TestCase as TestCase;
 
-// Setup PHPUnit autoloading
-require_once "PHPUnit/Autoload.php";
+/**
+ *
+ */
+class ChgrpTest extends TestCase
+{
 
-// Set the error reporting
-error_reporting(E_ALL | E_STRICT);
+    /**
+     * File
+     * @var string
+     */
+    private $_file;
 
-// Load the configuration
-if (is_readable('TestConfiguration.php')) {
-    require_once 'TestConfiguration.php';
-} else {
-    require_once 'TestConfiguration.php.dist';
+    /**
+     * File system
+     * @var FileSystem
+     */
+    private $_fileSystem;
+
+    /**
+     * Setup the test case
+     */
+    public function setUp()
+    {
+        if (!PILE_CHGRP_VALID_GROUP) {
+            $this->markTestSkipped("PILE_CHGRP_VALID_GROUP constant is not set");
+        }
+
+        if (!PILE_CHGRP_INVALID_GROUP) {
+            $this->markTestSkipped("PILE_CHGRP_INVALID_GROUP constant is not set");
+        }
+
+        $this->_file = tempnam(sys_get_temp_dir(), "TEST");
+        $this->_fileSystem = new FileSystem();
+    }
+
+    /**
+     * Tear down the test case
+     */
+    public function tearDown()
+    {
+        unlink($this->_file);
+    }
+
+    public function testInvalidGroupNamesFail()
+    {
+        $this->setExpectedException("\Pile\Exception");
+
+        $this->_fileSystem
+             ->chgrp($this->_file, PILE_CHGRP_INVALID_GROUP);
+    }
+
+    public function testGroupIsChanged()
+    {
+        $this->_fileSystem
+             ->chgrp($this->_file, PILE_CHGRP_VALID_GROUP);
+
+        $group = posix_getgrgid(filegroup($this->_file));
+
+        $this->assertEquals(PILE_CHGRP_VALID_GROUP, $group["name"]);
+    }
+
 }
