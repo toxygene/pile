@@ -29,15 +29,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Setup Pile autoloading
-require_once "../library/Pile/Autoloader.php";
-
-$pileAutoloader = new Pile\Autoloader();
-$pileAutoloader->register();
-
-// Setup PHPUnit autoloading
-require_once "PHPUnit/Autoload.php";
-
 // Set the error reporting
 error_reporting(E_ALL | E_STRICT);
 
@@ -47,3 +38,12 @@ if (is_readable('TestConfiguration.php')) {
 } else {
     require_once 'TestConfiguration.php.dist';
 }
+
+// Setup Pile autoloading
+require_once "../library/Pile/Autoloader.php";
+
+$pileAutoloader = new Pile\Autoloader();
+$pileAutoloader->register();
+
+// Setup PHPUnit autoloading
+require_once "PHPUnit/Autoload.php";
